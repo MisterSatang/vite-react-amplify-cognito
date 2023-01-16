@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-viteamplifycognito-dev-231739-authRole",
+      "UnauthRoleArn": "arn:aws:iam::521880304855:role/amplify-viteamplifycognito-dev-231739-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::521880304855:role/amplify-viteamplifycognito-dev-231739-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-viteamplifycognito-dev-231739-deployment",
+      "UnauthRoleName": "amplify-viteamplifycognito-dev-231739-unauthRole",
+      "StackName": "amplify-viteamplifycognito-dev-231739",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:521880304855:stack/amplify-viteamplifycognito-dev-231739/f7776ae0-9426-11ed-ad25-0ac9beb095ec",
+      "AmplifyAppId": "dzcscfjelw3ns"
+    },
+    "categories": {
+      "function": {
+        "viteAmplifyCognito": {
+          "deploymentBucketName": "amplify-viteamplifycognito-dev-231739-deployment",
+          "s3Key": "amplify-builds/viteAmplifyCognito-755133375876716f7961-build.zip"
+        }
+      },
+      "api": {
+        "APItest": {}
+      }
+    }
+  }
+}

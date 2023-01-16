@@ -1,0 +1,43 @@
+{
+  "api": {
+    "APItest": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "viteAmplifyCognito"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "viteAmplifyCognito": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_viteAmplifyCognito_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "viteAmplifyCognito"
+        }
+      ]
+    },
+    "AMPLIFY_function_viteAmplifyCognito_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "viteAmplifyCognito"
+        }
+      ]
+    }
+  }
+}
