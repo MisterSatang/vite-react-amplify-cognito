@@ -14,5 +14,7 @@ model users {
 }
 
 model person {
-  perosnId String @id
+  perosnId  String  @id @default(uuid())
+  citizenId String? @unique @db.VarChar(100)
+  name      String? @db.VarChar(100)
 }

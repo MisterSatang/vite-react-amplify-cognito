@@ -7,16 +7,44 @@ export const validateRegister = async (req: Request, res: Response, next: NextFu
             required_error: "Email is required",
         }).email("Not a valid email"),
         password: z.string().min(8),
+        username: z.string({
+            required_error: "user name is required",
+        })
     });
+
     if (!(verify(req.body.username))) {
         return res.status(400).json({ message: 'Citizen id is not true' });
     }
+
     try {
         await schema.parseAsync(req.body);
         return next();
     } catch (error) {
         return res.status(400).json(error);
     }
+}
+
+export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = z.object({
+        username: z.string({
+            required_error: 'Username is required to login'
+        }),
+        password: z.string({
+            required_error: 'password is required'
+        }).min(8)
+    })
+
+    if (!(verify(req.body.username))) {
+        return res.status(400).json({ message: 'Citizen id is not true' });
+    }
+
+    try {
+        await schema.parseAsync(req.body);
+        return next();
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+
 }
 
 const verify = (id: string) => {

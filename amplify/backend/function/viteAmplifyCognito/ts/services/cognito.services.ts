@@ -9,8 +9,8 @@ export default class Cognito {
         region: 'ap-southeast-1',
     }
 
-    private secretHash = ''
-    private clientId = '';
+    private secretHash: string | any;
+    private clientId: string | any;
 
     private cognitoIdentity: AWS.CognitoIdentityServiceProvider;
 
@@ -22,6 +22,8 @@ export default class Cognito {
 
     constructor() {
         this.cognitoIdentity = new AWS.CognitoIdentityServiceProvider(this.config)
+        this.clientId = process.env.CLIENID
+        this.secretHash = process.env.SECRETHASH
     }
 
     public async resgister(username: string, password: string, userAttr: Array<any>): Promise<AWS.CognitoIdentityServiceProvider.SignUpResponse> {
@@ -40,7 +42,7 @@ export default class Cognito {
         }
     }
 
-    public async login(username: string, password: string): Promise<boolean> {
+    public async login(username: string, password: string): Promise<AWS.CognitoIdentityServiceProvider.InitiateAuthResponse> {
         var params = {
             AuthFlow: 'USER_PASSWORD_AUTH', /* required */
             ClientId: this.clientId, /* required */
@@ -53,11 +55,9 @@ export default class Cognito {
 
         try {
             let data = await this.cognitoIdentity.initiateAuth(params).promise();
-            console.log(data);
-            return true;
-        } catch (error) {
-            console.log(error)
-            return false;
+            return data;
+        } catch (error: AWS.CognitoIdentityServiceProvider.InitiateAuthResponse | any) {
+            return error;
         }
     }
 
