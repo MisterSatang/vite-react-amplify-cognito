@@ -1,19 +1,28 @@
 import { Request, Response, NextFunction } from 'express'
 import z from 'zod';
+import { _findEmailValidation } from '../../services/user.services';
 
 export const validateRegister = async (req: Request, res: Response, next: NextFunction) => {
     const schema = z.object({
         email: z.string({
-            required_error: "Email is required",
+            required_error: "Email is required to register",
         }).email("Not a valid email"),
         password: z.string().min(8),
         username: z.string({
-            required_error: "user name is required",
+            required_error: "user name is required to register",
         })
     });
 
+    const findEmail = await _findEmailValidation(req.body.email);
+
     if (!(verify(req.body.username))) {
         return res.status(400).json({ message: 'Citizen id is not true' });
+    }
+
+    // console.log(findEmail);
+
+    if (findEmail) {
+        return res.status(400).json({ message: 'Email is already exit' });
     }
 
     try {
@@ -45,6 +54,60 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
         return res.status(400).json(error);
     }
 
+}
+
+export const validateConfirmRegister = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = z.object({
+        username: z.string({
+            required_error: 'Username is required to confirm registration'
+        }),
+        code: z.string({
+            required_error: 'code is required to confirm registration'
+        }).min(6).max(6)
+    })
+
+    try {
+        await schema.parseAsync(req.body);
+        return next();
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+export const validateForgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = z.object({
+        username: z.string({
+            required_error: 'Username is required to forgot password'
+        })
+    })
+
+    try {
+        await schema.parseAsync(req.body);
+        return next();
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+export const validateConfirmNewPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const schema = z.object({
+        username: z.string({
+            required_error: 'Username is required to confirm registration'
+        }),
+        password: z.string({
+            required_error: 'password is required'
+        }).min(8),
+        code: z.string({
+            required_error: 'code is required to confirm registration'
+        }).min(6).max(6)
+    })
+
+    try {
+        await schema.parseAsync(req.body);
+        return next();
+    } catch (error) {
+        return res.status(400).json(error);
+    }
 }
 
 const verify = (id: string) => {

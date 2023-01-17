@@ -13,7 +13,7 @@ import dotenv from 'dotenv';
 dotenv.config()
 import { authRoutes } from './routes';
 const bodyParser = require('body-parser');
-const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
+import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
 // declare a new express app
 const app = express();
 app.use(bodyParser.json());
