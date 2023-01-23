@@ -13,7 +13,7 @@ export const resgister = async (req: Request, res: ReturnResponse) => {
             return res.status(400).json({ success: false, message: "result is empty", error_code: httpStatus.badRequest, data: {} });
         }
 
-        const { username, password, email } = req.body;
+        const { username, password, name, lastname, gender, birthday, telNo, email } = req.body;
 
         let userAttr = [];
         userAttr.push({ Name: 'email', Value: email });
@@ -22,7 +22,7 @@ export const resgister = async (req: Request, res: ReturnResponse) => {
         cognitoService.resgister(username, password, userAttr)
             .then(result => {
                 result.UserSub ?
-                    _addUser(result.UserSub, username, email).then(result2 => {
+                    _addUser(result.UserSub, username, email, name, lastname, gender, birthday, telNo).then(result2 => {
                         result2 ? res.status(201).json({ success: true, message: "Create user success", error_code: httpStatus.created, data: { result } })
                             : res.status(422).json({ success: false, message: 'fail to create user', error_code: httpStatus.unprocessableEntity, data: { result } })
                     }) : res.status(422).json({ success: false, message: 'fail to create user', error_code: httpStatus.unprocessableEntity, data: { result } })

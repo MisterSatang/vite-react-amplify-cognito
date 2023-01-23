@@ -9,10 +9,27 @@ export const validateRegister = async (req: Request, res: ReturnResponse, next: 
         email: z.string({
             required_error: "Email is required to register",
         }).email("Not a valid email"),
-        password: z.string().min(8),
+        password: z.string({
+            required_error: "password is required to register",
+        }).min(8),
         username: z.string({
-            required_error: "user name is required to register",
-        })
+            required_error: "CitizenId is required to register",
+        }),
+        name: z.string({
+            required_error: "name is required to register",
+        }),
+        lastname: z.string({
+            required_error: "lastname is required to register",
+        }),
+        gender: z.string({
+            required_error: "gender is required to register",
+        }),
+        birthday: z.string({
+            required_error: "birthday is required to register",
+        }),
+        telNo: z.string({
+            required_error: "telephone number is required to register",
+        }),
     });
 
     const findEmail = await _findEmailValidation(req.body.email);
