@@ -4,7 +4,7 @@ import { Request, Response } from 'express'
 interface ReturnResponseInterface {
     "success": boolean,
     "message": string,
-    "error_code"?: number,
+    "error_code": number,
     "data": {}
 }
 

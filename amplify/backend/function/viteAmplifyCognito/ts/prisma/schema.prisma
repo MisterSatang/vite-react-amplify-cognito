@@ -7,14 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model Users {
   userId    String  @id
   citizenId String? @unique @db.VarChar(100)
   email     String  @unique
 }
 
-model person {
-  perosnId  String  @id @default(uuid())
-  citizenId String? @unique @db.VarChar(100)
-  name      String? @db.VarChar(100)
+model Person {
+  id        Int     @id @default(autoincrement())
+  citizenId String  @unique(map: "Person_UN") @db.VarChar(25)
+  perfix    String  @db.VarChar(25)
+  Fname     String  @db.VarChar(25)
+  Lname     String  @db.VarChar(25)
+  gender    String  @db.VarChar(10)
+  birthday  String? @db.VarChar(25)
 }

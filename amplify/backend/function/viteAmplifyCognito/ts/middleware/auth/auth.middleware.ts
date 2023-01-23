@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
 import type { UserCognitoJwtPayload, IGetUserCognitoAuthInfoRequest } from '../../types/jwt'
 import dotenv from 'dotenv';
+import ReturnResponse from '../../types/return.Response'
+import { httpStatus } from '../../types/http'
 dotenv.config()
 
 const pems: { [key: string]: any } = {}
@@ -18,22 +20,22 @@ class AuthMiddleware {
         this.setUp()
     }
 
-    verifyToken(req: IGetUserCognitoAuthInfoRequest, res: Response, next: NextFunction): Response | undefined {
+    verifyToken(req: IGetUserCognitoAuthInfoRequest, res: ReturnResponse, next: NextFunction) {
         try {
             const token = req.header('Auth');
             // console.log(token)
-            if (!token) return res.status(401).end();
+            if (!token) return res.status(401).json({ success: false, message: "Token not found", error_code: httpStatus.unauthorized, data: {} });
 
             const decodedJwt = jwt.decode(token, { complete: true });
             if (decodedJwt === null) {
-                return res.status(401).end()
+                return res.status(401).json({ success: false, message: "Token not found", error_code: httpStatus.unauthorized, data: {} });
             }
             // console.log(decodedJwt)
             const kid: any = decodedJwt.header.kid;
             const pem = pems[kid];
             // console.log(pem)
             if (!pem) {
-                return res.status(401).end()
+                return res.status(401).json({ success: false, message: "Token not found", error_code: httpStatus.unauthorized, data: {} });
             }
             const decode = jwt.verify(token, pem);
             req.jwtObject = decode;
@@ -41,8 +43,7 @@ class AuthMiddleware {
             next();
 
         } catch (error) {
-            res.status(401).json({ error })
-
+            return res.status(400).json({ success: false, message: 'bad request', error_code: httpStatus.badRequest, data: { error } })
         }
     }
 
