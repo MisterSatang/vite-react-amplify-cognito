@@ -4,29 +4,30 @@ import { body, validationResult } from 'express-validator';
 import Cognito from '../services/cognito.services';
 import { _addUser } from '../services/user.services';
 import { findByCitizenId } from '../services/person.services';
+import ReturnResponse from '../types/return.Response'
+import { httpStatus } from '../types/http'
 
-export const resgister = async (req: Request, res: Response) => {
+export const resgister = async (req: Request, res: ReturnResponse) => {
     try {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            return res.status(422).json({ errors: result.array() });
+            return res.status(400).json({ success: false, message: "result is empty", error_code: httpStatus.badRequest, data: {} });
         }
+
         const { username, password, email } = req.body;
 
         let userAttr = [];
         userAttr.push({ Name: 'email', Value: email });
-        const getPersonId = await findByCitizenId(username);
 
-        if (getPersonId) {
-            const cognitoService = new Cognito();
-            cognitoService.resgister(username, password, userAttr)
-                .then(result => {
-                    result.UserSub ? _addUser(result.UserSub, username, getPersonId, email).then(result2 => { result2 ? res.status(200).json({ message: 'create sucesss', result: result2 }) : res.status(400) }) : res.status(400).json({ message: 'fail to create user', result })
-                })
-        } else {
-            res.status(400).json({ message: 'dont have citizenId in databases', result: { getPersonId } })
-        }
-
+        const cognitoService = new Cognito();
+        cognitoService.resgister(username, password, userAttr)
+            .then(result => {
+                result.UserSub ?
+                    _addUser(result.UserSub, username, email).then(result2 => {
+                        result2 ? res.status(200).json({ success: true, message: "Create user success", data: { result } })
+                            : res.status(400)
+                    }) : res.status(400).json({ message: 'fail to create user', result })
+            })
     } catch (error) {
         res.json(error);
     }
@@ -111,5 +112,4 @@ export const confirmNewPassword = async (req: Request, res: Response) => {
     } catch (error) {
         res.json(error);
     }
-
 }

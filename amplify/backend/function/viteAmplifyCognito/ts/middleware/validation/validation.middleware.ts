@@ -22,7 +22,7 @@ export const validateRegister = async (req: Request, res: Response, next: NextFu
     // console.log(findEmail);
 
     if (findEmail) {
-        return res.status(400).json({ message: 'Email is already exit' });
+        return res.status(400).json({ message: 'Email is already exit', result: { message: 'Email is Already exists' } });
     }
 
     try {
