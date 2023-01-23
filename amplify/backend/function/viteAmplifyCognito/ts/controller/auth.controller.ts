@@ -3,7 +3,6 @@ import { Request, Response } from 'express'
 import { body, validationResult } from 'express-validator';
 import Cognito from '../services/cognito.services';
 import { _addUser } from '../services/user.services';
-import { findByCitizenId } from '../services/person.services';
 import ReturnResponse from '../types/return.Response'
 import { httpStatus } from '../types/http'
 
@@ -25,11 +24,11 @@ export const resgister = async (req: Request, res: ReturnResponse) => {
                 result.UserSub ?
                     _addUser(result.UserSub, username, email).then(result2 => {
                         result2 ? res.status(200).json({ success: true, message: "Create user success", data: { result } })
-                            : res.status(400)
-                    }) : res.status(400).json({ message: 'fail to create user', result })
+                            : res.status(422).json({ success: false, message: 'fail to create user', error_code: httpStatus.unprocessableEntity, data: { result } })
+                    }) : res.status(422).json({ success: false, message: 'fail to create user', error_code: httpStatus.unprocessableEntity, data: { result } })
             })
     } catch (error) {
-        res.json(error);
+        res.status(400).json({ success: false, message: 'bad request', error_code: httpStatus.badRequest, data: { error } })
     }
 }
 
